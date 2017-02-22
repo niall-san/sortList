@@ -4,7 +4,6 @@
 #include <string>
 #include <unistd.h>
 #include <iostream>
-#include "input.h"
 #include <string>
 
 using namespace std;

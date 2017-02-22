@@ -48,17 +48,18 @@ string trim(string str)
 }
 
 string removeExtensions(string input, int status){
-  regex checkExtensions("^.+\\..+");
-  if (status == 1){
-  if(regex_match(input, checkExtensions)){
-    for(int i = 0; i<input.length(); i++){
-      if (input[i] == '.'){
-        input = input.substr(0,i);
-      }
-    }
-  }
-}
-  return input;
+        regex checkExtensions("^.+\\..+");
+        if (status == 1) {
+                if(regex_match(input, checkExtensions)) {
+                        for(int i = 0; i<input.length(); i++) {
+                                if (input[i] == '.') {
+                                      //  cout << "Found . in: " << input << endl;
+                                        input = input.substr(0,i);
+                                }
+                        }
+                }
+        }
+        return input;
 }
 
 
@@ -71,7 +72,7 @@ vector<string> getFileNames(string directory){
         if (dpdf != NULL) {
                 while (epdf = readdir(dpdf)) {
                         if (regex_match(string(epdf->d_name), checkFiles)) {
-                                if (directory[directory.size()] != '/') {
+                                if (directory[directory.size()-1] != '/') {
                                         filenames.push_back(directory+'/'+string(epdf->d_name));
                                 } else {
                                         filenames.push_back(directory+string(epdf->d_name));
@@ -90,98 +91,84 @@ vector<string> getFileNames(string directory){
 
 
 bool checkForDuplicates(vector<string> checkList, string word){
-        for (int i = 0; i<checkList.size(); i++) {
-                if(checkList[i] == word) {
-                        //cout << "Duplicate " << word << " Found" << endl;
-                        return false;
-                }
-        }
-        return true;
+        return(find(checkList.begin(), checkList.end(), word) != checkList.end());
 }
 
-int letterToAscii (string letter){
-  string s = letter;
-  return (s[0]);
+bool order (string i, string j) {
+        string iString = i;
+        string jString = j;
+        return (iString[0]<jString[0]);
 }
-bool order (string i, string j) { return (letterToAscii(i)<letterToAscii(j)); }
 void sort (vector<string> &vec) {
-    sort(vec.begin(), vec.end(), order);
+        sort(vec.begin(), vec.end(), order);
 }
 
-string checkFormat(string wordToCheck){
-        //cout << "Checking format of: " << wordToCheck << endl;
-        stringstream tempString;
-        wordToCheck = trim(wordToCheck);
-        for(int i = 0; i < wordToCheck.size(); i++) {
-                if(wordToCheck[i] == '/') {
-                        for (int i=0; i<wordToCheck.length(); i++)
-                        {
-                                if (wordToCheck[i] == '/')
-                                        if (i != wordToCheck.length()-1) {
-                                                wordToCheck[i] = '\n';
-                                        } else wordToCheck[i]=' ';
-                        }
-                        //cout << "Returning: " << wordToCheck;
-                        return trim(wordToCheck);
 
-                } else if(wordToCheck[i] == '\\') {
-                        for (int i=0; i<wordToCheck.length(); i++)
-                        {
-                                if (wordToCheck[i] == '\\')
-                                        if (i != wordToCheck.length()-1) {
-                                                wordToCheck[i] = '\n';
-                                        } else wordToCheck[i]=' ';
-                        }
-                        return trim(wordToCheck);
-                }
+vector<string> explode(string const & s, int status)
+{
+  vector<string> result;
+    if (status == 1){
+      istringstream iss(s);
+
+      for (string token; getline(iss, token, '/'); )
+      {
+          result.push_back(move(token));
         }
-        return trim(wordToCheck);
+
+        return result;
+      }
+  result.push_back(s);
+  return result;
 }
 
-void wordlistToFile(string listsDir, string outputDir, int splitURL, int sorting, int status){
+
+
+void wordlistToFile(Input options){
         vector<string> enumeratedVector;
-        enumeratedVector = wordlistsToVector(listsDir, splitURL, sorting, status);
-        ofstream newWordlist(outputDir);
+        enumeratedVector = wordlistsToVector(options);
+        ofstream newWordlist;
+        int wordcount;
+        regex finalCheck("[a-zA-Z\\./0-9~]+");
+        newWordlist.open(options.getOutput());
         for (int i = 0; i<enumeratedVector.size(); i++) {
-                newWordlist << enumeratedVector[i] << endl;
+          if(regex_match(enumeratedVector[i], finalCheck)){
+            wordcount += 1;
+            newWordlist << enumeratedVector[i] << endl;
+          }
         }
+        cout << endl << "Created wordlist of " << wordcount << " words"<< endl;
         newWordlist.close();
 }
 
-vector<string> wordlistsToVector(string directory, int splitURL, int sorting, int status){
+vector<string> wordlistsToVector(Input options){
         vector<string> fileNameVector;
         vector<string> wordListVector;
-        fileNameVector = getFileNames(directory);
+        fileNameVector = getFileNames(options.getDirectory());
         cout << "Found " << fileNameVector.size() << " files to proccess" << endl;
         string line;
-        string formattedString;
+        string tempString;
+        vector<string> temp;
 
         for(int i = 0; i<fileNameVector.size(); i++) {
                 // cout << "Proccessing: " << fileNameVector[i] << endl;
                 cout << "\r" << "Proccessing ==> " << fileNameVector[i] << "                        ";
                 cout << flush;
                 ifstream openCurrentList(fileNameVector[i]);
-                if (splitURL == 1) {
-                        while (getline(openCurrentList, line) ) { // iterate line by line of file
-                                formattedString = checkFormat(line);
-                                if(checkForDuplicates(wordListVector, checkFormat(line)) == true) {
-                                        formattedString = removeExtensions(formattedString);
-                                        wordListVector.push_back(formattedString); //append line to vector
-                                }
+                while (getline(openCurrentList, line)) { // iterate line by line of file
+                  temp = explode(line, options.getSplitURL());
+                  for(int e = 0; e<temp.size(); e++){
+                  tempString = trim(temp[e]);
+                  tempString = removeExtensions(tempString, options.getExtension());
+                  if (checkForDuplicates(wordListVector,tempString) == false){
+                          wordListVector.push_back(tempString);
                         }
-                } else {
-                        while (getline(openCurrentList, line) ) { // iterate line by line of file
-                                if(checkForDuplicates(wordListVector, line) == true) {
-                                        formattedString = removeExtensions(line);
-                                        wordListVector.push_back(formattedString); //append line to vector
-                                }
-                        }
-                }
-                if (sorting == 1){
-                  sort(wordListVector);
                 }
         }
-        cout << endl << "Created wordlist of " << wordListVector.size() << " words"<< endl;
+    }
+        if (options.getSorting() == 1){
+          sort(wordListVector);
+        }
+
         return wordListVector;
 }
 
@@ -202,9 +189,9 @@ int main(int argc, char* argv[]){
         splashScreen();
         options.showOptions();
         try{
-                wordlistToFile(options.getDirectory(), options.getOutput(), options.getSplitURL(), options.getSorting(), options.getExtension());
-        } catch (int e) {
-
+                wordlistToFile(options);
+        }catch(int e){
+          return 0;
         }
 
         cout << "====== Done!=====" << endl;
