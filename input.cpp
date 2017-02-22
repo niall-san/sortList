@@ -12,6 +12,7 @@ void Input::show_usage(string name) // usage function called when no parameters 
             << "\t-o \tFile to output as\n"
             << "\t-s \tSorting in ASCII order (by first character of word)\n"
             << "\t-f \tFormat lines that contains deeper than one directory\n"
+            << "\t-e \tRemove file extensions\n"
             << "-------------------------------------------------------------\n"
             << "by oniichan\n"
             << endl;
@@ -30,6 +31,9 @@ int Input::getSplitURL(){
 int Input::getSorting(){
   return sorting;
 }
+int Input::getExtension(){
+  return extensions;
+}
 
 
 
@@ -39,7 +43,7 @@ void Input::getOptions(int argc, char* argv[]){
           throw 1;
   }
 
-while( ( c = getopt (argc, argv, "hfso:d:") ) != -1 ) {
+while( ( c = getopt (argc, argv, "hfso:d:e") ) != -1 ) {
         switch(c) {
         case 'h':
                 show_usage(argv[0]);
@@ -55,6 +59,9 @@ while( ( c = getopt (argc, argv, "hfso:d:") ) != -1 ) {
                 break;
         case 's':
                 sorting = 1; //optional
+                break;
+        case 'e':
+                extensions = 1; //optional
                 break;
         case '?':
                 if ((optopt == 'o') || (optopt == 'd')){

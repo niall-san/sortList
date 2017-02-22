@@ -47,6 +47,20 @@ string trim(string str)
         return trimmed;
 }
 
+string removeExtensions(string input, int status){
+  regex checkExtensions("^.+\\..+");
+  if (status == 1){
+  if(regex_match(input, checkExtensions)){
+    for(int i = 0; i<input.length(); i++){
+      if (input[i] == '.'){
+        input = input.substr(0,i);
+      }
+    }
+  }
+}
+  return input;
+}
+
 
 vector<string> getFileNames(string directory){
         DIR *dpdf;
@@ -124,9 +138,9 @@ string checkFormat(string wordToCheck){
         return trim(wordToCheck);
 }
 
-void wordlistToFile(string listsDir, string outputDir, int splitURL, int sorting){
+void wordlistToFile(string listsDir, string outputDir, int splitURL, int sorting, int status){
         vector<string> enumeratedVector;
-        enumeratedVector = wordlistsToVector(listsDir, splitURL, sorting);
+        enumeratedVector = wordlistsToVector(listsDir, splitURL, sorting, status);
         ofstream newWordlist(outputDir);
         for (int i = 0; i<enumeratedVector.size(); i++) {
                 newWordlist << enumeratedVector[i] << endl;
@@ -134,7 +148,7 @@ void wordlistToFile(string listsDir, string outputDir, int splitURL, int sorting
         newWordlist.close();
 }
 
-vector<string> wordlistsToVector(string directory, int splitURL, int sorting){
+vector<string> wordlistsToVector(string directory, int splitURL, int sorting, int status){
         vector<string> fileNameVector;
         vector<string> wordListVector;
         fileNameVector = getFileNames(directory);
@@ -151,13 +165,15 @@ vector<string> wordlistsToVector(string directory, int splitURL, int sorting){
                         while (getline(openCurrentList, line) ) { // iterate line by line of file
                                 formattedString = checkFormat(line);
                                 if(checkForDuplicates(wordListVector, checkFormat(line)) == true) {
+                                        formattedString = removeExtensions(formattedString);
                                         wordListVector.push_back(formattedString); //append line to vector
                                 }
                         }
                 } else {
                         while (getline(openCurrentList, line) ) { // iterate line by line of file
                                 if(checkForDuplicates(wordListVector, line) == true) {
-                                        wordListVector.push_back(line); //append line to vector
+                                        formattedString = removeExtensions(line);
+                                        wordListVector.push_back(formattedString); //append line to vector
                                 }
                         }
                 }
@@ -186,7 +202,7 @@ int main(int argc, char* argv[]){
         splashScreen();
         options.showOptions();
         try{
-                wordlistToFile(options.getDirectory(), options.getOutput(), options.getSplitURL(), options.getSorting());
+                wordlistToFile(options.getDirectory(), options.getOutput(), options.getSplitURL(), options.getSorting(), options.getExtension());
         } catch (int e) {
 
         }
