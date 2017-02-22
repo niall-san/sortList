@@ -10,6 +10,8 @@ void Input::show_usage(string name) // usage function called when no parameters 
             << "\t-h \tShow this help message\n"
             << "\t-d \tDirectory where wordlists are (must be .txt)\n"
             << "\t-o \tFile to output as\n"
+            << "\t-s \tSorting in ASCII order (by first character of word)\n"
+            << "\t-f \tFormat lines that contains deeper than one directory\n"
             << "-------------------------------------------------------------\n"
             << "by oniichan\n"
             << endl;
@@ -25,6 +27,9 @@ string Input::getOutput(){
 int Input::getSplitURL(){
   return splitURL;
 }
+int Input::getSorting(){
+  return sorting;
+}
 
 
 
@@ -34,13 +39,13 @@ void Input::getOptions(int argc, char* argv[]){
           throw 1;
   }
 
-while( ( c = getopt (argc, argv, "hso:d:") ) != -1 ) {
+while( ( c = getopt (argc, argv, "hfso:d:") ) != -1 ) {
         switch(c) {
         case 'h':
                 show_usage(argv[0]);
                 throw 1;
-        case 's':
-                if(optarg) splitURL = 1; //optional
+        case 'f':
+                splitURL = 1; //optional
                 break;
         case 'o':
                 if(optarg) outPutDir = optarg; //optional
@@ -48,10 +53,11 @@ while( ( c = getopt (argc, argv, "hso:d:") ) != -1 ) {
         case 'd':
                 if(optarg) directory = optarg; //optional
                 break;
-
-
+        case 's':
+                sorting = 1; //optional
+                break;
         case '?':
-                if ((optopt == 'o' || (optopt == 'd') || (optopt == 's'))){
+                if ((optopt == 'o') || (optopt == 'd')){
                   fprintf(stderr,"\033[031m[Error]\033[0m - Option -%c requires an argument.\n", optopt);
                   throw 1337;
                 }else if (isprint (optopt)) {
@@ -73,4 +79,10 @@ void Input::showOptions(){
   } else {
   cout << "[Splitting URLs]" << " - Yes"  << endl;
   }
+  if(sorting == 0){
+  cout << "[Sorting in ASCII Order]" << " - No"  << endl;
+  } else {
+  cout << "[Sorting in ASCII Order]" << " - Yes"  << endl;
+  }
+  cout << "-----------------------------------" << endl;
 }

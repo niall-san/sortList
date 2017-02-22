@@ -13,6 +13,7 @@ class Input{
 
   int c;
   string outPutDir, directory;
+  int sorting;
 
 public:
 
@@ -23,9 +24,11 @@ public:
   void show_usage(string name);
   int getSplitURL();
   void showOptions();
+  int getSorting();
 
   Input(){
     splitURL = 0;
+    sorting = 0;
   }
 };
 
