@@ -48,7 +48,7 @@ string trim(string str)
 }
 
 string removeExtensions(string input, int status){
-        regex checkExtensions("^.+\\..+");
+        regex checkExtensions("^.+\\..*$");
         if (status == 1) {
                 if(regex_match(input, checkExtensions)) {
                         for(int i = 0; i<input.length(); i++) {
@@ -67,7 +67,7 @@ vector<string> getFileNames(string directory){
         DIR *dpdf;
         struct dirent *epdf;
         std::vector<string> filenames;
-        regex checkFiles("^.*(.txt)$");
+        regex checkFiles("^.*\\.(txt|wordlist|list)$");
         dpdf = opendir(directory.c_str());
         if (dpdf != NULL) {
                 while (epdf = readdir(dpdf)) {
@@ -127,12 +127,12 @@ void wordlistToFile(Input options){
         vector<string> enumeratedVector;
         enumeratedVector = wordlistsToVector(options);
         ofstream newWordlist;
-        int wordcount;
+        int wordcount = 0;
         regex finalCheck("[a-zA-Z\\./0-9~]+");
         newWordlist.open(options.getOutput());
         for (int i = 0; i<enumeratedVector.size(); i++) {
           if(regex_match(enumeratedVector[i], finalCheck)){
-            wordcount += 1;
+            wordcount = wordcount + 1;
             newWordlist << enumeratedVector[i] << endl;
           }
         }
@@ -180,10 +180,7 @@ int main(int argc, char* argv[]){
         try{
                 options.getOptions(argc, argv);
         }catch (int e) {
-                if (e == 1) {
-                        return 0;
-                }
-                return 0;
+          return 0;
         }
 
         splashScreen();

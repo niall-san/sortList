@@ -12,7 +12,7 @@
 #include <algorithm>
 
 using namespace std;
-vector<string> explode(string const & s, char delim);
+vector<string> explode(string const & s, int status, char delimiter);
 vector<string> wordlistsToVector(Input options);
 string trim(string str);
 vector<string> getFileNames(string directory);
@@ -21,6 +21,7 @@ vector<string> checkFormat(string wordToCheck, int status);
 void wordlistToFile(Input options);
 void splashScreen();
 string removeExtensions(string input, int status);
+
 
 
 #endif
