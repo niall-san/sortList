@@ -31,10 +31,9 @@ else
 fi
 
 while true; do
-	read -p "Would you like to add a symlink to sortList?(y/n) (y if unsure)"yn
+	read -p "Would you like to add a symlink to sortList?(y/n) (y if unsure)" yn
 	case $yn in
-		[Yy]* ) ln -s "/usr/share/sortlist/sortlist"  /usr/local/bin/sortlist;
-		       echo "Use the command 'sortlist' to run the program"; break;;
+		[Yy]* ) ln -s "/usr/share/sortlist/sortlist"  /usr/local/bin/sortlist; echo "Use the command 'sortlist' to run the program"; break;;
 		[Nn]* ) exit;;
 		* ) echo "Please answer y or n.";;
 	esac
