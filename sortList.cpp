@@ -94,13 +94,8 @@ bool checkForDuplicates(vector<string> checkList, string word){
         return(find(checkList.begin(), checkList.end(), word) != checkList.end());
 }
 
-bool order (string i, string j) {
-        string iString = i;
-        string jString = j;
-        return (iString[0]<jString[0]);
-}
 void sort (vector<string> &vec) {
-        sort(vec.begin(), vec.end(), order);
+        sort(vec.begin(), vec.end());
 }
 
 
