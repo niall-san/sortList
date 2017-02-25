@@ -28,5 +28,5 @@ sudo chmod +x ./install.sh
 sudo ./install.sh
 ```
 ## Compiling Manually
-From the root of the extracted download, execute:
+From the root of the extracted download, execute:  
 `g++ sortList.cpp input.cpp -o sortlist`
