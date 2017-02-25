@@ -1,9 +1,9 @@
 # sortList
-Tool for joining wordlists without duplicates or whitespaces, can also format urls into one word lines.
+Wordlist management tool
 
 ## Usage
 ```
-Usage: sortlist -d /myWordlistFolder  -o /outputdir/outputfile
+Usage: sortlist -s -f -e -d /myWordlistFolder  -o /outputdir/outputfile
 Options:
 	   	All options check for and duplicates in the wordlist
 	-h 	Show this help message
