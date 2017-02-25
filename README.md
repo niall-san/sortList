@@ -1,11 +1,12 @@
 # sortList
 Wordlist management tool
 
-## Features
+## Features  
 * Join multiple wordlists together, checking for duplication of words
 * Any URLs in the wordlist can be broken into seperate words (inbetween the slashes) which are then added to the wordlist
 * Sort outputted wordlist in ASCII order
-* Remove file extensions
+* Remove file extensions  
+
 ## Usage
 ```
 Usage: sortlist -s -f -e -d /myWordlistFolder  -o /outputdir/outputfile
