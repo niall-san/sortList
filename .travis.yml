@@ -1,11 +1,21 @@
+sudo: required
+dist: trusty
 language: cpp
+compiler: g++
+install: export CXX="g++-5"
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-5
+notifications:
+ email:
+  on_success: never
+  on_failure: always
+before_install: 
+	- sudo apt-get update -qq
+	- cd build
+	- cmake .. 
 
-compiler:  
-    - gcc
-    - clang
-
-before_script:  
-    - cd build
-    - cmake ..
-
-script: make  
+script: make
