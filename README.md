@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/niall-san/sortList.svg?branch=master)](https://travis-ci.org/niall-san/sortList)
+
 # sortList
 Wordlist management tool
 
