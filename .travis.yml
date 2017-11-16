@@ -14,21 +14,8 @@ notifications:
   on_success: never
   on_failure: always
 before_install: 
-	- sudo apt-get update -qq
-	- cd build
-	- cmake .. 
+- sudo apt-get update -qq
+- cd build
+- cmake .. 
 
-<<<<<<< HEAD
 script: make
-=======
-compiler:  
-    - gcc
-    - clang
-
-before_script:  
-    - mkdir build
-    - cd build
-    - cmake ..
-
-script: make  
->>>>>>> aaa3fb0d07a1aec9412a8a86f8865138e8a3a7e1
